@@ -108,8 +108,8 @@ The endpoint `GET /api/screen/home` must accurately output the following contrac
 - [x] `internal/screen/handler.go` - ScreenHandler with GetHomeScreen method
 - [x] `internal/server/server.go` - Server routing with Go 1.22 mux and middleware
 - [x] `cmd/api/main.go` - Entry point with graceful shutdown and timeouts
-- [ ] Compile and test endpoint
-- [ ] Create GitHub repository and push
+- [x] Compile and test endpoint
+- [x] Create GitHub repository and push
 
 ---
 

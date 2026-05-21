@@ -1,6 +1,6 @@
 # SPEC-002: Screen Behavior Flags (Pull-to-Refresh & Future Extensions)
 
-**Status:** Draft
+**Status:** Implemented
 **Date:** 2026-05-21
 **Author:** Claude Code
 
@@ -41,7 +41,7 @@ type ScreenResponse struct {
 ### 5.1 `GET /api/screen/home` (Updated)
 ```json
 {
-  "screen_name": "home_page",
+  "screen_name": "home",
   "pull_to_refresh": true,
   "components": [
     {
@@ -67,15 +67,61 @@ type ScreenResponse struct {
 
 ---
 
-## 6. Implementation Checklist
-- [x] Update `ScreenResponse` struct with `PullToRefresh` field
-- [x] Update `GetHomeScreen` handler to set `PullToRefresh: true`
-- [ ] Add `infinite_scroll` flag when needed (future)
-- [ ] Document client-side behavior for pull-to-refresh
+## 6. Client-Side Behavior
+
+When the client receives `"pull_to_refresh": true` in the screen response, it should enable the pull-to-refresh gesture on the screen. The behavior is:
+
+### 6.1 Refresh Action
+On pull-to-refresh trigger, the client must re-fetch the screen data:
+```
+GET /api/screen/{screenId}
+```
+
+The same request used to initially load the screen should be executed again.
+
+### 6.2 Platform Implementation Notes
+
+**Android (Kotlin/Compose):**
+```kotlin
+val pullToRefresh = screenResponse.pull_to_refresh ?: false
+if (pullToRefresh) {
+    Box(modifier = Modifier.pullToRefresh(state)) {
+        // screen content
+    }
+}
+```
+
+**Android (XML/RecyclerView):**
+Use `SwipeRefreshLayout` wrapped around the content view. Set `isEnabled = pullToRefresh`.
+
+**iOS (SwiftUI):**
+```swift
+if screenResponse.pullToRefresh {
+    List { /* components */ }
+        .refreshable {
+            await reloadScreen()
+        }
+}
+```
+
+**Web:**
+Use standard `pull-to-refresh` CSS/JS behavior or a library like `PullToRefresh.js`. Honor the flag before enabling.
+
+### 6.3 Error Handling
+- If the refresh request fails, show an error state (snackbar/toast) but keep the current screen content
+- Avoid showing loading states that block the entire screen during refresh
 
 ---
 
-## 7. Success Criteria
+## 7. Implementation Checklist
+- [x] Update `ScreenResponse` struct with `PullToRefresh` field
+- [x] Update `GetHomeScreen` handler to set `PullToRefresh: true`
+- [x] Document client-side behavior for pull-to-refresh
+- [ ] Add `infinite_scroll` flag when needed (future)
+
+---
+
+## 8. Success Criteria
 1. `go build ./...` compiles without errors
 2. `GET /api/screen/home` returns `"pull_to_refresh": true`
 3. Other screen endpoints can set `pull_to_refresh` independently
@@ -84,7 +130,7 @@ type ScreenResponse struct {
 
 ---
 
-## 8. Future Extensions
+## 9. Future Extensions
 When adding more behaviors (e.g., infinite scroll), follow the same pattern:
 ```go
 type ScreenResponse struct {
