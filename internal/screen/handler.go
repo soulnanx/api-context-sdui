@@ -35,7 +35,8 @@ func (h *ScreenHandler) GetHomeScreen(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := ScreenResponse{
-		ScreenName: "home_page",
+		ScreenName:    "home_page",
+		PullToRefresh: true,
 		Components: []Component{
 			{Type: "hero_banner", ID: "b1", Data: heroData},
 			{Type: "action_button", ID: "btn1", Data: btnData},

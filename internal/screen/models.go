@@ -9,6 +9,7 @@ type Component struct {
 }
 
 type ScreenResponse struct {
-	ScreenName string      `json:"screen_name"`
-	Components []Component `json:"components"`
+	ScreenName    string      `json:"screen_name"`
+	PullToRefresh bool        `json:"pull_to_refresh"`
+	Components    []Component `json:"components"`
 }

@@ -125,6 +125,7 @@ curl http://localhost:8080/api/screen/home
 ```json
 {
   "screen_name": "home_page",
+  "pull_to_refresh": true,
   "components": [
     {
       "type": "hero_banner",
