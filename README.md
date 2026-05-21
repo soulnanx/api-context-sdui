@@ -110,6 +110,36 @@ go build -o bin/api ./cmd/api
 
 ---
 
+## 🛠️ Makefile Commands
+
+The project includes a Makefile to simplify common development tasks:
+
+| Target | Description |
+|--------|-------------|
+| `make build` | Compile binary to `bin/api` |
+| `make run` | Run server directly via `go run` |
+| `make test` | Run all tests with verbose output |
+| `make test-coverage` | Generate HTML coverage report (`coverage.html`) |
+| `make clean` | Remove `bin/`, `coverage.out`, `coverage.html` |
+| `make fmt` | Format code with `gofmt` |
+| `make vet` | Run `go vet` on all packages |
+| `make tidy` | Run `go mod tidy` |
+| `make check` | Run `fmt`, `vet`, and `test` sequentially |
+| `make dev` | Start server and verify with curl |
+| `make spec` | List available specs in `specs/` |
+
+Example:
+```bash
+# Build and run
+make build
+./bin/api
+
+# Or use check before committing
+make check
+```
+
+---
+
 ## 📡 API Reference
 
 ### GET /api/screen/{screenId}

@@ -1,6 +1,6 @@
 # SPEC-005: Makefile for Development Workflow
 
-**Status:** Draft
+**Status:** Implemented
 **Date:** 2026-05-21
 **Author:** Claude Code
 
@@ -52,20 +52,20 @@ After the Makefile is implemented and verified, update `README.md`:
 ---
 
 ## 4. Implementation Checklist
-- [ ] `Makefile` - Create file in project root with all targets above
-- [ ] `make build` - compiles to `bin/api`
-- [ ] `make run` - starts server on `:8080`
-- [ ] `make test` - runs `go test -v ./...`
-- [ ] `make test-coverage` - generates `coverage.html`
-- [ ] `make clean` - removes build artifacts
-- [ ] `make fmt` - formats code
-- [ ] `make vet` - runs static analysis
-- [ ] `make tidy` - tidies go.mod
-- [ ] `make check` - runs fmt, vet, test
-- [ ] `make dev` - starts server and hits `/api/screen/home`
-- [ ] `make spec` - lists files in `specs/`
-- [ ] Update `README.md` with Makefile commands section
-- [ ] `make check` passes with no errors
+- [x] `Makefile` - Create file in project root with all targets above
+- [x] `make build` - compiles to `bin/api`
+- [x] `make run` - starts server on `:8080`
+- [x] `make test` - runs `go test -v ./...`
+- [x] `make test-coverage` - generates `coverage.html`
+- [x] `make clean` - removes build artifacts
+- [x] `make fmt` - formats code
+- [x] `make vet` - runs static analysis
+- [x] `make tidy` - tidies go.mod
+- [x] `make check` - runs fmt, vet, test
+- [x] `make dev` - starts server and hits `/api/screen/home`
+- [x] `make spec` - lists files in `specs/`
+- [x] Update `README.md` with Makefile commands section
+- [x] `make check` passes with no errors
 
 ---
 
