@@ -112,19 +112,22 @@ go build -o bin/api ./cmd/api
 
 ## 📡 API Reference
 
-### GET /api/screen/home
+### GET /api/screen/{screenId}
 
-Returns the home screen configuration with polymorphic components.
+Returns a screen configuration by its identifier. The server controls what each screen renders; the client only displays.
 
 **Request:**
 ```bash
 curl http://localhost:8080/api/screen/home
 ```
 
+**Parameters:**
+- `screenId` (path): Screen identifier (e.g., `home`, `profile`, `settings`)
+
 **Response (200 OK):**
 ```json
 {
-  "screen_name": "home_page",
+  "screen_name": "home",
   "pull_to_refresh": true,
   "components": [
     {
@@ -145,6 +148,13 @@ curl http://localhost:8080/api/screen/home
       }
     }
   ]
+}
+```
+
+**Response (404 Not Found):**
+```json
+{
+  "error": "screen not found"
 }
 ```
 

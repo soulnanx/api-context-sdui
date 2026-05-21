@@ -16,7 +16,7 @@ func NewServer() *Server {
 	mux := http.NewServeMux()
 	screenHandler := &screen.ScreenHandler{}
 
-	mux.HandleFunc("GET /api/screen/home", screenHandler.GetHomeScreen)
+	mux.HandleFunc("GET /api/screen/{screenId}", screenHandler.GetScreen)
 
 	handler := loggingMiddleware(mux)
 	return &Server{handler: handler}
