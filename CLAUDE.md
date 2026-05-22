@@ -14,7 +14,8 @@ cmd/api/main.go          # Entry point, server startup
 internal/
   component/models.go    # Component schemas (HeroBanner, ActionButton, etc.)
   screen/
-    handler.go           # HTTP handlers (GetScreen, buildScreen, buildHomeScreen)
+    handler.go           # HTTP handlers (screen + admin CRUD)
+    storage.go           # In-memory screen store with RWMutex
     models.go            # Core SDUI envelopes (Component, ScreenResponse)
   server/
     server.go            # Routing + middleware
@@ -28,7 +29,7 @@ Makefile                  # Dev workflow (build, run, test, check, etc.)
 - **Generic endpoint:** `GET /api/screen/{screenId}` — no per-screen endpoints, no API versioning
 - **ScreenResponse:** `screen_name`, `pull_to_refresh`, `components[]`
 - **JSON:** All field names use `snake_case`
-- **Screen registry:** New screens added via `buildScreen()` switch case in `handler.go`
+- **Screen registry:** Screens managed via in-memory store; admin API for CRUD operations
 
 ## Workflow
 1. Write/update spec in `specs/`
@@ -38,6 +39,5 @@ Makefile                  # Dev workflow (build, run, test, check, etc.)
 5. Commit and push to `origin/main` on GitHub
 
 ## Current State
-- Specs 001, 002, 004: Implemented
-- Spec 005 (Makefile): Implemented, needs commit
-- No test files yet (`*_test.go` missing in all packages)
+- Specs 001, 002, 004, 005, 006: Implemented
+- Test files exist (`*_test.go` in internal/screen/)
