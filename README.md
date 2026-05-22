@@ -19,6 +19,7 @@ This project demonstrates a **Server-Driven UI (SDUI)** architecture where the b
 - ✅ **SPEC Driven Development** - Specifications in `specs/`
 - ✅ **Graceful shutdown** - Proper signal handling and timeouts
 - ✅ **Standard Go layout** - Idiomatic project structure
+- ✅ **Admin API** - Dynamic screen management via in-memory CRUD endpoints
 
 ---
 
@@ -70,7 +71,8 @@ api-context-sdui/
 │   ├── component/
 │   │   └── models.go           # Component schemas (HeroBanner, ActionButton)
 │   ├── screen/
-│   │   ├── handler.go          # HTTP handlers
+│   │   ├── handler.go          # HTTP handlers (screen + admin)
+│   │   ├── storage.go         # In-memory screen store with RWMutex
 │   │   └── models.go          # Core SDUI envelopes (Component, ScreenResponse)
 │   └── server/
 │       └── server.go           # Routing (Go 1.22 mux) + middleware
@@ -144,7 +146,7 @@ make check
 
 ### GET /api/screen/{screenId}
 
-Returns a screen configuration by its identifier. The server controls what each screen renders; the client only displays.
+Returns a screen configuration by its identifier. Reads from the in-memory screen store; screens can be created/updated/deleted via the Admin API.
 
 **Request:**
 ```bash
@@ -187,6 +189,52 @@ curl http://localhost:8080/api/screen/home
   "error": "screen not found"
 }
 ```
+
+### Admin API (In-Memory Screen Management)
+
+All admin endpoints are mounted under `/api/admin/screen/`. Screens are stored in memory; a server restart resets all data to the initial `home` screen.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/api/admin/screen/{screenId}` | Create a new screen (409 if exists) |
+| `GET` | `/api/admin/screen/{screenId}` | Retrieve screen config (404 if not found) |
+| `PUT` | `/api/admin/screen/{screenId}` | Update existing screen (404 if not found) |
+| `DELETE` | `/api/admin/screen/{screenId}` | Delete screen (404 if not found) |
+
+#### POST /api/admin/screen/{screenId}
+
+Request body (no `screen_name` — it is taken from the URL):
+```json
+{
+  "pull_to_refresh": true,
+  "components": [
+    {
+      "type": "hero_banner",
+      "id": "b1",
+      "data": {
+        "title": "My Screen",
+        "image_url": "https://example.com/img.jpg",
+        "action_id": "NAVIGATE"
+      }
+    }
+  ]
+}
+```
+
+Response: HTTP 201 Created with the created screen (includes `screen_name`), 409 if screen already exists.
+
+#### GET /api/admin/screen/{screenId}
+
+Response: HTTP 200 with full `ScreenResponse` JSON, 404 if not found.
+
+#### PUT /api/admin/screen/{screenId}
+
+Request body: same as POST. Fully replaces the screen configuration.
+Response: HTTP 200 with updated screen, 404 if not found.
+
+#### DELETE /api/admin/screen/{screenId}
+
+Response: HTTP 204 No Content on success, 404 if not found.
 
 ---
 
@@ -304,7 +352,11 @@ This project follows **SPEC Driven Development**. All features start with a spec
 
 ```
 specs/
-└── 001-sdui-bff-api.md    # Initial BFF specification
+├── 001-sdui-bff-api.md       # Initial BFF specification (Implemented)
+├── 002-*.md                  # Additional specs (Implemented)
+├── 004-*.md                  # Additional specs (Implemented)
+├── 005-makefile.md           # Makefile workflow (Implemented)
+└── 006-admin-api-inmemory.md # Admin API with in-memory storage (Implemented)
 ```
 
 Each spec includes:

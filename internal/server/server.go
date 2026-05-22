@@ -17,6 +17,10 @@ func NewServer() *Server {
 	screenHandler := &screen.ScreenHandler{}
 
 	mux.HandleFunc("GET /api/screen/{screenId}", screenHandler.GetScreen)
+	mux.HandleFunc("POST /api/admin/screen/{screenId}", screenHandler.CreateScreen)
+	mux.HandleFunc("GET /api/admin/screen/{screenId}", screenHandler.GetScreenConfig)
+	mux.HandleFunc("PUT /api/admin/screen/{screenId}", screenHandler.UpdateScreen)
+	mux.HandleFunc("DELETE /api/admin/screen/{screenId}", screenHandler.DeleteScreen)
 
 	handler := loggingMiddleware(mux)
 	return &Server{handler: handler}
